@@ -1,18 +1,37 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div v-if="isLoggedIn">
+    <Button @click="openCreateWorkspaceDialog">Create workspace</Button>
   </div>
+  <div v-else>
+    auth before proceeding
+  </div>
+  <CreateWorkspaceModal :showWorkspaceDialog="showWorkspaceDialog" @toggleDialog="showWorkspaceDialog = $event" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
+import { defineComponent, computed, ref } from 'vue'
+import { useStore } from 'vuex'
+import CreateWorkspaceModal from '@/components/Workspace/createWorkspaceModal.vue'
 
 export default defineComponent({
   name: 'HomeView',
   components: {
-    HelloWorld
+    CreateWorkspaceModal
+  },
+  setup () {
+    const { state } = useStore()
+
+    const showWorkspaceDialog = ref(false)
+
+    const openCreateWorkspaceDialog = () => {
+      showWorkspaceDialog.value = true
+    }
+
+    return {
+      isLoggedIn: computed(() => state.auth.common.isLoggedIn),
+      openCreateWorkspaceDialog,
+      showWorkspaceDialog
+    }
   }
 })
 </script>

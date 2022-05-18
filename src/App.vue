@@ -1,30 +1,58 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div v-if="!auth.isLoading && auth.isLoaded">
+    <nav>
+      <Button class="p-button-text">
+        <router-link to="/">Home</router-link>
+      </Button>
+      <Button class="p-button-text">
+        <router-link to="/auth" v-if="!auth.isLoggedIn">Auth</router-link>
+      </Button>
+      <Button v-if="auth.isLoggedIn" @click="logOut" label="Log out" class="p-button-secondary p-button-raised" />
+    </nav>
+    <router-view/>
+  </div>
+  <div v-else>
+    LOADING...
+  </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { computed, defineComponent, onBeforeMount, watchEffect } from 'vue'
+import { useStore } from 'vuex'
+import { AuthActionTypes } from './store/action-types'
 
-nav {
-  padding: 30px;
+export default defineComponent({
+  setup () {
+    const { state, dispatch } = useStore()
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+    onBeforeMount(() => {
+      dispatch(AuthActionTypes.AUTHENTICATE)
+    })
 
-    &.router-link-exact-active {
-      color: #42b983;
+    const logOut = () => dispatch(AuthActionTypes.LOG_OUT)
+
+    return {
+      auth: computed(() => state.auth.common),
+      logOut
     }
   }
-}
+})
+</script>
+
+<style lang="scss">
+  a {
+    text-decoration: none;
+  }
+  body {
+    background-color: var(--surface-ground);
+    font-family: var(--font-family);
+    color: var(--text-color);
+  }
+  nav {
+    display: flex;
+    justify-content: space-between;
+  }
+  .p-button-text a {
+    color: inherit;
+  }
 </style>
