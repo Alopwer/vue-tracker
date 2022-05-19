@@ -1,5 +1,5 @@
 <template>
-  <div class="col-3 absolute auth-wrapper">
+  <div class="col-9 absolute auth-wrapper md:col-3">
     <LogIn v-if="activeForm === ActiveForm.LogIn" />
     <SignUp v-else @switchActiveForm="switchActiveForm" />
     <Button :label="buttonLabel" @click="switchActiveForm" class="w-full" />
