@@ -1,13 +1,7 @@
 <template>
-  <div v-if="!auth.isLoading && auth.isLoaded">
+  <div v-if="auth.isLoaded && !auth.isLoading">
     <nav>
-      <Button class="p-button-text">
-        <router-link to="/">Home</router-link>
-      </Button>
-      <Button class="p-button-text">
-        <router-link to="/auth" v-if="!auth.isLoggedIn">Auth</router-link>
-      </Button>
-      <Button v-if="auth.isLoggedIn" @click="logOut" label="Log out" class="p-button-secondary p-button-raised" />
+      <Button v-if="isAuthenticated" @click="logOut" label="Log out" class="p-button-secondary p-button-raised " />
     </nav>
     <router-view/>
   </div>
@@ -16,14 +10,16 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent, onBeforeMount, watchEffect } from 'vue'
-import { useStore } from 'vuex'
-import { AuthActionTypes } from './store/action-types'
+<script lang="ts">
+import { computed, defineComponent, onBeforeMount, watch, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from './store'
+import { AuthActionTypes } from './store/auth/action-types'
 
 export default defineComponent({
   setup () {
-    const { state, dispatch } = useStore()
+    const { state, dispatch, getters } = useStore()
+    const router = useRouter()
 
     onBeforeMount(() => {
       dispatch(AuthActionTypes.AUTHENTICATE)
@@ -31,8 +27,20 @@ export default defineComponent({
 
     const logOut = () => dispatch(AuthActionTypes.LOG_OUT)
 
+    const isAuthLoading = computed(() => getters.isAuthLoading)
+    const isAuthenticated = computed(() => getters.isAuthenticated)
+
+    watch([isAuthenticated, isAuthLoading], () => {
+      if (!isAuthenticated.value && !isAuthLoading.value) {
+        router.push('/auth')
+      }
+    })
+
+    console.log(router.currentRoute.value)
+
     return {
       auth: computed(() => state.auth.common),
+      isAuthenticated,
       logOut
     }
   }
@@ -50,7 +58,7 @@ export default defineComponent({
   }
   nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
   }
   .p-button-text a {
     color: inherit;

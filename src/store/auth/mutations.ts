@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { ILogInResponse, IError } from './types'
-import { AuthMutationTypes } from '../mutation-types'
-import { defaultUserState, State } from './auth.state'
+import { AuthMutationTypes } from './mutation-types'
+import { defaultUserState, State } from './state'
 
 export type Mutations<S = State> = {
   [AuthMutationTypes.SET_IS_LOGGED_IN](state: S, payload: boolean): void
@@ -14,7 +14,7 @@ export type Mutations<S = State> = {
   [AuthMutationTypes.SET_SIGN_UP_FULLFILLED](state: S, payload: boolean): void
 }
 
-export const authMutations: MutationTree<State> & Mutations = {
+export const mutations: MutationTree<State> & Mutations = {
   [AuthMutationTypes.SET_IS_LOGGED_IN] (state, payload) {
     state.common.isLoggedIn = payload
   },

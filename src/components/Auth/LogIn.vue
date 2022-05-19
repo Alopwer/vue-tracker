@@ -15,15 +15,16 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, watch, onBeforeUnmount } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '../../store'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import { EMPTY_ERROR } from '@/constants'
-import { AuthMutationTypes } from '../../store/mutation-types'
-import { AuthActionTypes } from '../../store/action-types'
+import { AuthMutationTypes } from '../../store/auth/mutation-types'
+import { AuthActionTypes } from '../../store/auth/action-types'
 
 export default defineComponent({
+  name: 'LogIn',
   setup () {
-    const { state, dispatch, commit } = useStore()
+    const { state, dispatch, commit, getters } = useStore()
     const router = useRouter()
 
     const logInData = reactive({
@@ -43,9 +44,9 @@ export default defineComponent({
     }
 
     watch(
-      () => state.auth.user.username,
-      (username) => {
-        if (username) {
+      () => getters.isAuthenticated,
+      (isAuthenticated) => {
+        if (isAuthenticated) {
           router.push('/')
         }
       }

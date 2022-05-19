@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watch, watchEffect, toRefs } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '../../store'
 
 export default defineComponent({
   name: 'CreateWorkspaceModal',
@@ -27,7 +27,7 @@ export default defineComponent({
     const workspaceName = ref('')
 
     const createWorkspace = () => {
-      dispatch('createWorkspace', { title: workspaceName })
+      // dispatch('createWorkspace', { title: workspaceName })
     }
 
     const isDialogOpen = computed({

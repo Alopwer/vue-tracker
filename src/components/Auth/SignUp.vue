@@ -18,17 +18,17 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, watch, onBeforeUnmount, onBeforeMount } from 'vue'
-import { useStore } from 'vuex'
-import { onBeforeRouteLeave, useRouter } from 'vue-router'
+import { onBeforeRouteLeave } from 'vue-router'
 import { EMPTY_ERROR } from '@/constants'
-import { AuthMutationTypes } from '../../store/mutation-types'
-import { AuthActionTypes } from '../../store/action-types'
+import { useStore } from '../../store'
+import { AuthMutationTypes } from '../../store/auth/mutation-types'
+import { AuthActionTypes } from '../../store/auth/action-types'
 
 export default defineComponent({
   emits: ['switchActiveForm'],
+  name: 'SignUp',
   setup (_, { emit }) {
     const { state, dispatch, commit } = useStore()
-    const router = useRouter()
 
     onBeforeRouteLeave(() => {
       clearForm()

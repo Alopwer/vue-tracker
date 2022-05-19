@@ -3,7 +3,7 @@ import { createApp } from 'vue'
 import AuthApi from './api/auth.api'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import { store } from './store'
 import PrimeVue from 'primevue/config'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
@@ -13,7 +13,7 @@ import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.min.css'
 
-axios.defaults.baseURL = 'https://de91-95-65-17-139.eu.ngrok.io'
+axios.defaults.baseURL = 'http://localhost:3000'
 axios.defaults.withCredentials = true
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 

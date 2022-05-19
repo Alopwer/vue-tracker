@@ -1,4 +1,4 @@
-import { IError, ILogInResponse } from '@/store'
+import { ILogInResponse } from '@/store/auth/types'
 import axios from 'axios'
 
 export interface ILogInDto {

@@ -4,10 +4,10 @@ export const defaultUserState = {
   email: ''
 }
 
-export const authState = {
+export const state = {
   common: {
     isLoggedIn: false,
-    isLoading: false,
+    isLoading: true,
     isLoaded: false
   },
   signUp: {
@@ -24,4 +24,4 @@ export const authState = {
   }
 }
 
-export type State = typeof authState
+export type State = typeof state

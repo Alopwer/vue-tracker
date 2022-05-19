@@ -1,17 +1,18 @@
 import { createStore } from 'vuex'
-import * as authModule from './auth/auth.store'
+import { store as auth, AuthStore, State as AuthState } from './auth'
 
-const store = createStore({
-  state: {},
-  getters: {},
-  mutations: {},
-  actions: {}
+export type RootState = {
+  auth: AuthState
+}
+
+export type Store = AuthStore<Pick<RootState, 'auth'>>
+
+export const store = createStore({
+  modules: {
+    auth
+  }
 })
 
-store.registerModule('auth', authModule.authStore)
-
-export default store
-
-export * from './auth/auth.store'
-export * from './action-types'
-export * from './mutation-types'
+export function useStore (): Store {
+  return store as Store
+}

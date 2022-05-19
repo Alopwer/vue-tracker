@@ -1,17 +1,15 @@
 <template>
-  <div v-if="isLoggedIn">
+  <div class="create-workspace" v-if="isAuthenticated">
     <Button @click="openCreateWorkspaceDialog">Create workspace</Button>
-  </div>
-  <div v-else>
-    auth before proceeding
   </div>
   <CreateWorkspaceModal :showWorkspaceDialog="showWorkspaceDialog" @toggleDialog="showWorkspaceDialog = $event" />
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
-import { useStore } from 'vuex'
-import CreateWorkspaceModal from '@/components/Workspace/createWorkspaceModal.vue'
+import { defineComponent, computed, ref, onBeforeMount } from 'vue'
+import { useStore } from '../store'
+import CreateWorkspaceModal from '@/components/Workspace/CreateWorkspaceModal.vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'HomeView',
@@ -19,19 +17,36 @@ export default defineComponent({
     CreateWorkspaceModal
   },
   setup () {
-    const { state } = useStore()
+    const { state, getters } = useStore()
+    const router = useRouter()
 
     const showWorkspaceDialog = ref(false)
+    const isAuthenticated = computed(() => getters.isAuthenticated)
+
+    onBeforeMount(() => {
+      if (!isAuthenticated.value) {
+        router.push('/auth')
+      }
+    })
 
     const openCreateWorkspaceDialog = () => {
       showWorkspaceDialog.value = true
     }
 
     return {
-      isLoggedIn: computed(() => state.auth.common.isLoggedIn),
+      isAuthenticated,
       openCreateWorkspaceDialog,
       showWorkspaceDialog
     }
   }
 })
 </script>
+
+<style lang="scss" scoped>
+  .create-workspace {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>

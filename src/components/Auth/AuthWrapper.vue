@@ -1,5 +1,5 @@
 <template>
-  <div class="col-4">
+  <div class="col-3 absolute auth-wrapper">
     <LogIn v-if="activeForm === ActiveForm.LogIn" />
     <SignUp v-else @switchActiveForm="switchActiveForm" />
     <Button :label="buttonLabel" @click="switchActiveForm" class="w-full" />
@@ -39,3 +39,11 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped lang="scss">
+  .auth-wrapper {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>

@@ -2,18 +2,19 @@ import { ILogInDto, ISignUpDto } from '@/api'
 import AuthApi from '@/api/auth.api'
 import { EMPTY_ERROR } from '@/constants'
 import { ActionContext, ActionTree } from 'vuex'
-import { AuthActionTypes } from '../action-types'
+import { AuthActionTypes } from './action-types'
 import { IError } from './types'
-import { AuthMutationTypes } from '../mutation-types'
-import { Mutations } from './auth.mutations'
-import { State } from './auth.state'
+import { AuthMutationTypes } from './mutation-types'
+import { Mutations } from './mutations'
+import { State } from './state'
+import { RootState } from '@/store'
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
     key: K,
     payload?: Parameters<Mutations[K]>[1]
   ): ReturnType<Mutations[K]>
-} & Omit<ActionContext<State, State>, 'commit'>
+} & Omit<ActionContext<State, RootState>, 'commit'>
 
 export interface Actions {
   [AuthActionTypes.LOG_IN](
@@ -32,7 +33,7 @@ export interface Actions {
   ): Promise<void>
 }
 
-export const authActions: ActionTree<State, State> & Actions = {
+export const actions: ActionTree<State, RootState> & Actions = {
   async [AuthActionTypes.LOG_IN] (context, data) {
     try {
       const response = await AuthApi.logIn(data)
