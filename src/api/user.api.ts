@@ -11,11 +11,11 @@ export class UserApi {
   private static readonly userApiUrl: string = `${this.baseName}`
   private static readonly coworkersApiUrl: string = '/relations/coworkers'
 
-  static async getUsersByUserName (username: string): Promise<User[]> {
+  static async getUsersByUserName (username?: string): Promise<User[]> {
     return axios.get(`${this.userApiUrl}`, { params: { username } })
   }
 
-  static async getUsersConnections (username?: string): Promise<User[]> {
+  static async getConnections (username?: string): Promise<User[]> {
     const reqOptions = username ? { params: { username } } : {}
     return axios.get(`${this.coworkersApiUrl}`, reqOptions)
   }

@@ -1,7 +1,19 @@
 import { User } from '@/api/user.api'
 
 export const state = {
-  connections: [] as User[]
+  connections: [],
+  users: [],
+  loadingState: {
+    isLoading: false,
+    isLoaded: false
+  }
 }
 
-export type State = typeof state
+export type State = {
+  connections: User[],
+  users: User[],
+  loadingState: {
+    isLoading: boolean,
+    isLoaded: boolean
+  }
+}

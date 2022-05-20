@@ -18,14 +18,32 @@ export interface Actions {
   [CoworkerActionTypes.GET_USER_CONNECTIONS](
     { commit }: AugmentedActionContext,
     payload?: string
+  ): Promise<void>,
+  [CoworkerActionTypes.GET_USERS](
+    { commit }: AugmentedActionContext,
+    payload?: string
   ): Promise<void>
 }
 
 export const actions: ActionTree<State, RootState> & Actions = {
   async [CoworkerActionTypes.GET_USER_CONNECTIONS] (context, username) {
     try {
-      const connections = await UserApi.getUsersConnections(username)
+      context.commit(CoworkerMutationTypes.SET_IS_LOADING, true)
+      context.commit(CoworkerMutationTypes.SET_IS_LOADED, false)
+      const connections = await UserApi.getConnections(username)
       context.commit(CoworkerMutationTypes.SET_USER_CONNECTIONS, connections)
+      context.commit(CoworkerMutationTypes.SET_IS_LOADING, false)
+      context.commit(CoworkerMutationTypes.SET_IS_LOADED, true)
+    } catch (e) {}
+  },
+  async [CoworkerActionTypes.GET_USERS] (context, username) {
+    try {
+      context.commit(CoworkerMutationTypes.SET_IS_LOADING, true)
+      context.commit(CoworkerMutationTypes.SET_IS_LOADED, false)
+      const users = await UserApi.getUsersByUserName(username)
+      context.commit(CoworkerMutationTypes.SET_USERS, users)
+      context.commit(CoworkerMutationTypes.SET_IS_LOADING, false)
+      context.commit(CoworkerMutationTypes.SET_IS_LOADED, true)
     } catch (e) {}
   }
 }
