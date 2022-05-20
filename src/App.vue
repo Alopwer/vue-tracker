@@ -1,8 +1,6 @@
 <template>
   <div v-if="auth.isLoaded && !auth.isLoading">
-    <nav>
-      <Button v-if="isAuthenticated" @click="logOut" label="Log out" class="p-button-secondary p-button-raised " />
-    </nav>
+    <NavBar v-if="isAuthenticated" />
     <router-view/>
   </div>
   <div v-else>
@@ -15,20 +13,24 @@ import { computed, defineComponent, onBeforeMount, watch, watchEffect } from 'vu
 import { useRouter } from 'vue-router'
 import { useStore } from './store'
 import { AuthActionTypes } from './store/auth/action-types'
+import { CoworkerActionTypes } from './store/coworkers/action-types'
+import NavBar from './components/NavBar/NavBar.vue'
 
 export default defineComponent({
+  components: {
+    NavBar
+  },
   setup () {
     const { state, dispatch, getters } = useStore()
     const router = useRouter()
 
-    onBeforeMount(() => {
-      dispatch(AuthActionTypes.AUTHENTICATE)
-    })
-
-    const logOut = () => dispatch(AuthActionTypes.LOG_OUT)
-
     const isAuthLoading = computed(() => getters.isAuthLoading)
     const isAuthenticated = computed(() => getters.isAuthenticated)
+
+    onBeforeMount(() => {
+      dispatch(AuthActionTypes.AUTHENTICATE)
+      dispatch(CoworkerActionTypes.GET_USER_CONNECTIONS)
+    })
 
     watch([isAuthenticated, isAuthLoading], () => {
       if (!isAuthenticated.value && !isAuthLoading.value) {
@@ -36,12 +38,9 @@ export default defineComponent({
       }
     })
 
-    console.log(router.currentRoute.value)
-
     return {
       auth: computed(() => state.auth.common),
-      isAuthenticated,
-      logOut
+      isAuthenticated
     }
   }
 })
@@ -55,12 +54,5 @@ export default defineComponent({
     background-color: var(--surface-ground);
     font-family: var(--font-family);
     color: var(--text-color);
-  }
-  nav {
-    display: flex;
-    justify-content: end;
-  }
-  .p-button-text a {
-    color: inherit;
   }
 </style>

@@ -1,5 +1,4 @@
-import { ILogInDto, ISignUpDto } from '@/api'
-import AuthApi from '@/api/auth.api'
+import { ILogInDto, ISignUpDto, AuthApi } from '@/api'
 import { EMPTY_ERROR } from '@/constants'
 import { ActionContext, ActionTree } from 'vuex'
 import { AuthActionTypes } from './action-types'

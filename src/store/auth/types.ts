@@ -1,8 +1,8 @@
-export interface IError {
+export type IError = {
   message: string[];
 }
 
-export interface ILogInResponse {
+export type ILogInResponse = {
   username: string;
   userId: string;
   email: string;

@@ -10,7 +10,7 @@ export interface ISignUpDto extends ILogInDto {
   username: string;
 }
 
-export default class AuthApi {
+export class AuthApi {
   private static readonly baseName: string = '/auth'
   private static readonly authApiUrl: string = `${this.baseName}`
 
