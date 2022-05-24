@@ -3,7 +3,7 @@
     <Button icon="pi pi-users"
       class="p-button-icon p-button-outlined p-button-secondary mr-5 p-button-sm"
       @click="toggleUsersOverlay" />
-    <OverlayPanel ref="overlayPanelRef">
+    <OverlayPanel ref="overlayPanelRef" @show="onOverlayPanelShow" @hide="onOverlayPanelHide">
       <div>
         <div class="p-inputtext-sm p-input-icon-right w-full mb-2" ref="userInputRef">
           <InputText class="w-full" type="text" v-model="searchValue" />
@@ -14,7 +14,7 @@
             <ConnectionsMenuTab :userConnections="userConnections" />
           </TabPanel>
           <TabPanel header="Find Connections">
-            <ConnectionsMenuTab :userConnections="foundUsers" />
+            <ConnectionsMenuTab canSendConnectionRequest :userConnections="foundUsers" />
           </TabPanel>
         </TabView>
       </div>
@@ -44,57 +44,61 @@ export default defineComponent({
     const searchValue = ref('')
     const activeTabIndex = ref(0)
     const overlayPanelRef = ref<OverlayPanelElType | null>(null)
-    const userInputRef = ref<HTMLElement | null>(null)
+    const userInputRef = ref<HTMLInputElement | null>(null)
 
     const userConnections = computed(() => state.coworkers.connections)
     const foundUsers = computed(() => state.coworkers.users)
-    const loadingState = computed(() => state.coworkers.loadingState)
-
-    const noUsersFound = computed(() =>
-      !foundUsers.value.length &&
-      searchValue.value &&
-      !loadingState.value.isLoading &&
-      loadingState.value.isLoaded
-    )
+    const loadingState = computed(() => state.coworkers.loadingState.connections)
 
     const toggleUsersOverlay = (event: Event) => {
       overlayPanelRef.value!.toggle(event)
       nextTick(() => {
-        (userInputRef.value!.firstChild as HTMLInputElement).focus()
+        if (userInputRef.value) {
+          (userInputRef.value!.firstChild as HTMLInputElement).focus()
+        }
       })
     }
 
-    const onSearchUsers = debounce(async (searchValue: string) => {
+    const onOverlayPanelShow = () => {
+      dispatch(CoworkerActionTypes.GET_USER_CONNECTIONS)
+    }
+
+    const onOverlayPanelHide = () => {
+      searchValue.value = ''
+    }
+
+    const onSearchUsers = async (searchValue: string) => {
       if (!searchValue) {
         commit(CoworkerMutationTypes.SET_USERS, [])
         return
       }
       dispatch(CoworkerActionTypes.GET_USERS, searchValue)
-    }, 500)
+    }
 
-    const onSearchConnections = debounce(async (searchValue: string) => {
-      dispatch(CoworkerActionTypes.GET_USER_CONNECTIONS, searchValue)
-    }, 500)
+    const onSearchConnections = async (searchValue: string) => {
+      return dispatch(CoworkerActionTypes.GET_USER_CONNECTIONS, searchValue)
+    }
 
-    watch([activeTabIndex, searchValue], ([activeTabValue, searchValue], _) => {
-      if (activeTabValue === 0) {
-        onSearchConnections(searchValue)
-        return
-      }
-      onSearchUsers(searchValue)
-    })
+    const onSearch = debounce(async () => {
+      await onSearchConnections(searchValue.value)
+      onSearchUsers(searchValue.value)
+    }, 250)
+
+    watch([searchValue], onSearch)
 
     return {
       overlayPanelRef,
       userInputRef,
-      noUsersFound,
       userConnections,
       searchValue,
       activeTabIndex,
       foundUsers,
       loadingState,
       onSearchUsers,
-      toggleUsersOverlay
+      toggleUsersOverlay,
+      onOverlayPanelShow,
+      onOverlayPanelHide,
+      onSearch
     }
   }
 })

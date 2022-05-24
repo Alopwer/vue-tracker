@@ -17,6 +17,28 @@ export class UserApi {
 
   static async getConnections (username?: string): Promise<User[]> {
     const reqOptions = username ? { params: { username } } : {}
-    return axios.get(`${this.coworkersApiUrl}`, reqOptions)
+    return axios.get(`${this.coworkersApiUrl}/approved`, reqOptions)
+  }
+
+  static async sendConnectionRequest (userId: string) {
+    return axios.post(`${this.coworkersApiUrl}/${userId}`)
+  }
+
+  static async getUserRequestedConnectionRequests (username?: string): Promise<User[]> {
+    const reqOptions = username ? { params: { username } } : {}
+    return axios.get(`${this.coworkersApiUrl}/requested`, reqOptions)
+  }
+
+  static async getUserReceivedConnectionRequests (username?: string): Promise<User[]> {
+    const reqOptions = username ? { params: { username } } : {}
+    return axios.get(`${this.coworkersApiUrl}/received`, reqOptions)
+  }
+
+  static async acceptConnectionRequest (userId: string) {
+    return axios.put(`${this.coworkersApiUrl}/${userId}`)
+  }
+
+  static async deleteConnection (userId: string) {
+    return axios.delete(`${this.coworkersApiUrl}/${userId}`)
   }
 }

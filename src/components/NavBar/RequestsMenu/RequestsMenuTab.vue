@@ -8,14 +8,14 @@
           <i class="pi pi-user"></i>
           <p>{{ user.username }}</p>
         </div>
-        <Button v-if="canSendConnectionRequest"
+        <Button v-if="canAcceptConnectionRequest"
           icon="pi pi-plus"
           class="p-button-success p-button-rounded p-button-text p-button-sm"
-          @click="sendConnectionRequest(user.userId)" />
+          @click="declineConnectionRequest(user.userId)" />
         <Button v-else
           icon="pi pi-minus"
           class="p-button-danger p-button-rounded p-button-text p-button-sm"
-          @click="deleteConnection(user.userId)" />
+          @click="acceptConnectionRequest(user.userId)" />
       </div>
     </div>
   </div>
@@ -31,28 +31,28 @@ import { useStore } from '../../../store'
 import { CoworkerActionTypes } from '../../../store/coworkers/action-types'
 
 export default defineComponent({
-  name: 'ConnectionsMenuTab',
+  name: 'RequestsMenuTab',
   props: {
     userConnections: Object as PropType<User>,
-    canSendConnectionRequest: {
+    canAcceptConnectionRequest: {
       type: Boolean,
       default: false
     }
   },
   setup (props, { emit }) {
     const { dispatch } = useStore()
-    const sendConnectionRequest = async (userId: string) => {
-      dispatch(CoworkerActionTypes.SEND_CONNECTION_REQUEST, userId)
+    const declineConnectionRequest = async (userId: string) => {
+      dispatch(CoworkerActionTypes.ACCEPT_CONNECTION_REQUEST, userId)
     }
 
-    const deleteConnection = async (userId: string) => {
-      dispatch(CoworkerActionTypes.DELETE_CONNECTION, userId)
+    const acceptConnectionRequest = async (userId: string) => {
+      dispatch(CoworkerActionTypes.DECLINE_CONNECTION_REQUEST, userId)
     }
 
     return {
       ...toRefs(props),
-      sendConnectionRequest,
-      deleteConnection
+      declineConnectionRequest,
+      acceptConnectionRequest
     }
   }
 })

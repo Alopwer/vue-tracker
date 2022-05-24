@@ -1,5 +1,6 @@
 <template>
   <nav>
+    <RequestsMenu />
     <ConnectionsMenu />
     <Button @click="logOut" label="Log out" class="p-button-secondary p-button-outlined p-button-sm" />
   </nav>
@@ -10,11 +11,13 @@ import { defineComponent } from 'vue'
 import { useStore } from '../../store'
 import { AuthActionTypes } from '../../store/auth/action-types'
 import ConnectionsMenu from './ConnectionsMenu/ConnectionsMenu.vue'
+import RequestsMenu from './RequestsMenu/RequestsMenu.vue'
 
 export default defineComponent({
   name: 'NavBar',
   components: {
-    ConnectionsMenu
+    ConnectionsMenu,
+    RequestsMenu
   },
   setup () {
     const { dispatch } = useStore()

@@ -4,8 +4,18 @@ export const state = {
   connections: [],
   users: [],
   loadingState: {
-    isLoading: false,
-    isLoaded: false
+    connections: {
+      isLoading: false,
+      isLoaded: false
+    },
+    requests: {
+      isLoading: false,
+      isLoaded: false
+    }
+  },
+  connectionRequests: {
+    requested: [],
+    received: []
   }
 }
 
@@ -13,7 +23,17 @@ export type State = {
   connections: User[],
   users: User[],
   loadingState: {
-    isLoading: boolean,
-    isLoaded: boolean
+    connections: {
+      isLoading: boolean,
+      isLoaded: boolean
+    },
+    requests: {
+      isLoading: boolean,
+      isLoaded: boolean
+    }
+  },
+  connectionRequests: {
+    requested: User[],
+    received: User[]
   }
 }

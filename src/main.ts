@@ -11,6 +11,8 @@ import Button from 'primevue/button'
 import OverlayPanel from 'primevue/overlaypanel'
 import TabView from 'primevue/tabview'
 import TabPanel from 'primevue/tabpanel'
+import Dropdown from 'primevue/dropdown'
+import MultiSelect from 'primevue/multiselect'
 import 'primevue/resources/themes/vela-purple/theme.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
@@ -29,6 +31,7 @@ axios.interceptors.response.use((response) => {
     try {
       await AuthApi.refreshToken()
     } catch (e) {
+      console.log(error)
       return Promise.reject(new Error(error.response.data.message))
     }
     return axios.request(error.config)
@@ -46,4 +49,6 @@ createApp(App)
   .component('OverlayPanel', OverlayPanel)
   .component('TabView', TabView)
   .component('TabPanel', TabPanel)
+  .component('Dropdown', Dropdown)
+  .component('MultiSelect', MultiSelect)
   .mount('#app')

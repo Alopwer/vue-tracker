@@ -1,7 +1,9 @@
 <template>
   <div v-if="auth.isLoaded && !auth.isLoading">
     <NavBar v-if="isAuthenticated" />
-    <router-view/>
+    <div class="container">
+      <router-view/>
+    </div>
   </div>
   <div v-else>
     LOADING...
@@ -13,8 +15,8 @@ import { computed, defineComponent, onBeforeMount, watch, watchEffect } from 'vu
 import { useRouter } from 'vue-router'
 import { useStore } from './store'
 import { AuthActionTypes } from './store/auth/action-types'
-import { CoworkerActionTypes } from './store/coworkers/action-types'
 import NavBar from './components/NavBar/NavBar.vue'
+import { CoworkerActionTypes } from './store/coworkers/action-types'
 
 export default defineComponent({
   components: {
@@ -29,12 +31,15 @@ export default defineComponent({
 
     onBeforeMount(() => {
       dispatch(AuthActionTypes.AUTHENTICATE)
-      dispatch(CoworkerActionTypes.GET_USER_CONNECTIONS)
     })
 
-    watch([isAuthenticated, isAuthLoading], () => {
-      if (!isAuthenticated.value && !isAuthLoading.value) {
+    watch([isAuthenticated, isAuthLoading], ([isAuthenticatedValue, isAuthLoadingValue]) => {
+      if (!isAuthenticatedValue && !isAuthLoadingValue) {
         router.push('/auth')
+      }
+      if (isAuthenticatedValue) {
+        dispatch(CoworkerActionTypes.GET_USER_CONNECTIONS)
+        dispatch(CoworkerActionTypes.GET_REQUESTED_CONNECTION_REQUESTS)
       }
     })
 
@@ -54,5 +59,9 @@ export default defineComponent({
     background-color: var(--surface-ground);
     font-family: var(--font-family);
     color: var(--text-color);
+    margin: 10px 20px;
+  }
+  .container {
+    margin: 20px 0;
   }
 </style>
