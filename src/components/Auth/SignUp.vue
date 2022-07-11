@@ -9,9 +9,8 @@
     <div class="col-12">
       <InputText type="password" placeholder="password" v-model="signUpData.password" />
     </div>
-    <span v-if="signUpError.length">{{ signUpError }}</span>
     <div class="col-12">
-      <Button label="Sign up" @click="signUp" class="p-button-secondary p-button-raised" />
+      <Button :disabled="isSignUpDisabled" label="Sign up" @click="signUp" class="p-button-secondary p-button-raised" />
     </div>
   </form>
 </template>
@@ -23,12 +22,15 @@ import { EMPTY_ERROR } from '@/constants'
 import { useStore } from '../../store'
 import { AuthMutationTypes } from '../../store/auth/mutation-types'
 import { AuthActionTypes } from '../../store/auth/action-types'
+import { useToast } from 'primevue/usetoast'
+import { toastErrorConfig } from '../../common'
 
 export default defineComponent({
   emits: ['switchActiveForm'],
   name: 'SignUp',
   setup (_, { emit }) {
     const { state, dispatch, commit } = useStore()
+    const toast = useToast()
 
     onBeforeRouteLeave(() => {
       clearForm()
@@ -45,7 +47,7 @@ export default defineComponent({
       password: ''
     })
 
-    const signUpError = computed(() => state.auth.errors.signUp.message)
+    const isSignUpDisabled = computed(() => !signUpData.username || !signUpData.email || !signUpData.password)
 
     function signUp () {
       dispatch(AuthActionTypes.SIGN_UP, signUpData)
@@ -66,10 +68,16 @@ export default defineComponent({
       }
     )
 
+    const signUpErrors = computed(() => state.auth.errors.signUp)
+
+    watch(signUpErrors, ({ message }) =>
+      message.length && toast.add({ ...toastErrorConfig, detail: message })
+    )
+
     return {
       signUpData,
       signUp,
-      signUpError
+      isSignUpDisabled
     }
   }
 })

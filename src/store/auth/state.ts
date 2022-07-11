@@ -1,3 +1,5 @@
+import { User } from '@/api/user.api'
+
 export const defaultUserState = {
   username: '',
   userId: '',
@@ -24,4 +26,22 @@ export const state = {
   }
 }
 
-export type State = typeof state
+export type State = {
+  common: {
+    isLoggedIn: boolean,
+    isLoading: boolean,
+    isLoaded: boolean
+  },
+  signUp: {
+    fullfilled: boolean
+  },
+  user: User,
+  errors: {
+    logIn: {
+      message: string[]
+    },
+    signUp: {
+      message: string[]
+    }
+  }
+}

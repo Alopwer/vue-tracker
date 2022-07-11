@@ -6,7 +6,7 @@
       <div class="users-block">
         <div class="flex">
           <i class="pi pi-user"></i>
-          <p>{{ user.username }}</p>
+          <p class="mb-0">{{ user.username }}</p>
         </div>
         <Button v-if="canSendConnectionRequest"
           icon="pi pi-plus"

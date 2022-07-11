@@ -22,10 +22,14 @@ export const mutations: MutationTree<State> & Mutations = {
     state.user = payload
   },
   [AuthMutationTypes.SET_LOGGED_IN_ERROR] (state, payload) {
-    (state.errors.logIn.message as string[]) = payload.message
+    state.errors.logIn = {
+      message: payload.message
+    }
   },
   [AuthMutationTypes.SET_SIGN_UP_ERROR] (state, payload) {
-    (state.errors.signUp.message as string[]) = payload.message
+    state.errors.signUp = {
+      message: payload.message
+    }
   },
   [AuthMutationTypes.RESET_USER] (state) {
     state.user = defaultUserState

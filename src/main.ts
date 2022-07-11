@@ -13,6 +13,9 @@ import TabView from 'primevue/tabview'
 import TabPanel from 'primevue/tabpanel'
 import Dropdown from 'primevue/dropdown'
 import MultiSelect from 'primevue/multiselect'
+import Chip from 'primevue/chip'
+import Toast from 'primevue/toast'
+import ToastService from 'primevue/toastservice'
 import 'primevue/resources/themes/vela-purple/theme.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
@@ -43,6 +46,7 @@ createApp(App)
   .use(store)
   .use(router)
   .use(PrimeVue)
+  .use(ToastService)
   .component('Button', Button)
   .component('Dialog', Dialog)
   .component('InputText', InputText)
@@ -51,4 +55,6 @@ createApp(App)
   .component('TabPanel', TabPanel)
   .component('Dropdown', Dropdown)
   .component('MultiSelect', MultiSelect)
+  .component('Chip', Chip)
+  .component('Toast', Toast)
   .mount('#app')

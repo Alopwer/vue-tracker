@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { User } from './user.api'
 
 export type CreateWorkspaceDto = {
   title: string;
@@ -8,6 +9,7 @@ export type CreateWorkspaceDto = {
 export type Workspace = {
   title: string;
   workspaceId: string;
+  coworkers: User[];
 }
 
 export class WorkspaceApi {
@@ -18,7 +20,19 @@ export class WorkspaceApi {
     return axios.get(`${this.workspaceApiUrl}`)
   }
 
+  static async getSharedWorkspaces (): Promise<Workspace[]> {
+    return axios.get(`${this.workspaceApiUrl}/shared`)
+  }
+
   static async createWorkspace (data: CreateWorkspaceDto): Promise<Workspace> {
     return axios.post(`${this.workspaceApiUrl}`, data)
+  }
+
+  static async getWorkspaceShareCode ({ workspaceId }: { workspaceId: string }): Promise<string> {
+    return axios.get(`${this.workspaceApiUrl}/${workspaceId}/link`)
+  }
+
+  static async addWorkspaceByShareCode ({ workspaceShareCode }: { workspaceShareCode: string }): Promise<string> {
+    return axios.post(`/relations${this.workspaceApiUrl}?workspaceShareCode=${workspaceShareCode}`)
   }
 }

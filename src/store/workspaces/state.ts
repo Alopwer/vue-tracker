@@ -6,8 +6,17 @@ export const state = {
     personal: [],
     shared: []
   },
-  isLoading: false,
-  isLoaded: false
+  loadingState: {
+    sharedWorkspaces: {
+      isLoading: false,
+      isLoaded: false
+    },
+    ownersWorkspaces: {
+      isLoading: false,
+      isLoaded: false
+    }
+  },
+  workspaceShareCode: ''
 }
 
 export type State = {
@@ -15,6 +24,15 @@ export type State = {
     personal: Workspace[],
     shared: Workspace[]
   },
-  isLoading: boolean,
-  isLoaded: boolean
+  loadingState: {
+    sharedWorkspaces: {
+      isLoading: boolean,
+      isLoaded: boolean,
+    },
+    ownersWorkspaces: {
+      isLoading: boolean,
+      isLoaded: boolean,
+    }
+  },
+  workspaceShareCode: string | null
 }

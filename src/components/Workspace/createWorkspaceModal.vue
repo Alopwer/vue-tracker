@@ -1,5 +1,5 @@
 <template>
-  <Dialog class="create-workspace-dialog" header="Create workspace" v-model:visible="isDialogOpen">
+  <Dialog :modal="true" :draggable="false" class="create-workspace-dialog" header="Create workspace" v-model:visible="isDialogOpen">
     <template #header>
       <h3>Create workspace</h3>
     </template>
@@ -7,7 +7,7 @@
       <div class="col-12 md:col-6">
         <InputText class="w-full" v-model="workspaceName" placeholder="Workspace title" />
       </div>
-      <div class="col-12 md:col-6">
+      <div class="col-12 md:col-6 coworkers-select">
         <MultiSelect class="w-full"
           v-model="selectedCoworkers"
           :options="userConnections"
@@ -83,6 +83,9 @@ export default defineComponent({
   }
   h3 {
     margin: 0;
+  }
+  .coworkers-select {
+    min-width: 12rem;
   }
 </style>
 

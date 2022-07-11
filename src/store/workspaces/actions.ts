@@ -22,7 +22,18 @@ export interface Actions {
   ): Promise<boolean>,
   [WorkspaceActionTypes.GET_OWNERS_WORKSPACES](
     { commit }: AugmentedActionContext
-  ): Promise<boolean>
+  ): Promise<boolean>,
+  [WorkspaceActionTypes.GET_SHARED_WORKSPACES](
+    { commit }: AugmentedActionContext
+  ): Promise<boolean>,
+  [WorkspaceActionTypes.GET_WORKSPACE_SHARE_CODE](
+    { commit }: AugmentedActionContext,
+    payload: { workspaceId: string }
+  ): Promise<unknown>,
+  [WorkspaceActionTypes.ADD_WORKSPACE_BY_SHARE_CODE](
+    { commit }: AugmentedActionContext,
+    payload: { workspaceShareCode: string }
+  ): Promise<unknown>
 }
 
 export const actions: ActionTree<State, RootState> & Actions = {
@@ -37,14 +48,47 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [WorkspaceActionTypes.GET_OWNERS_WORKSPACES] (context) {
     try {
-      context.commit(WorkspaceMutationTypes.SET_WORKSPACES_LOADING, true)
+      context.commit(WorkspaceMutationTypes.SET_OWNERS_WORKSPACES_LOADING, true)
       const workspaces = await WorkspaceApi.getOwnersWorkspaces()
       context.commit(WorkspaceMutationTypes.SET_WORKSPACES, workspaces)
-      context.commit(WorkspaceMutationTypes.SET_WORKSPACES_LOADING, false)
-      context.commit(WorkspaceMutationTypes.SET_WORKSPACES_LOADED, true)
+      context.commit(WorkspaceMutationTypes.SET_OWNERS_WORKSPACES_LOADING, false)
+      context.commit(WorkspaceMutationTypes.SET_OWNERS_WORKSPACES_LOADED, true)
       return true
     } catch (e) {
       return false
     }
+  },
+  async [WorkspaceActionTypes.GET_SHARED_WORKSPACES] (context) {
+    try {
+      context.commit(WorkspaceMutationTypes.SET_SHARED_WORKSPACES_LOADING, true)
+      const workspaces = await WorkspaceApi.getSharedWorkspaces()
+      context.commit(WorkspaceMutationTypes.SET_SHARED_WORKSPACES, workspaces)
+      context.commit(WorkspaceMutationTypes.SET_SHARED_WORKSPACES_LOADING, false)
+      context.commit(WorkspaceMutationTypes.SET_SHARED_WORKSPACES_LOADED, true)
+      return true
+    } catch (e) {
+      return false
+    }
+  },
+  async [WorkspaceActionTypes.GET_ALL_WORKSPACES] (context) {
+    try {
+      context.dispatch(WorkspaceActionTypes.GET_OWNERS_WORKSPACES)
+      context.dispatch(WorkspaceActionTypes.GET_SHARED_WORKSPACES)
+      return true
+    } catch (e) {
+      return false
+    }
+  },
+  async [WorkspaceActionTypes.GET_WORKSPACE_SHARE_CODE] (context, data) {
+    try {
+      context.commit(WorkspaceMutationTypes.SET_WORKSPACE_SHARE_CODE, null)
+      const workspaceShareCode = await WorkspaceApi.getWorkspaceShareCode(data)
+      context.commit(WorkspaceMutationTypes.SET_WORKSPACE_SHARE_CODE, workspaceShareCode)
+    } catch (e) {}
+  },
+  async [WorkspaceActionTypes.ADD_WORKSPACE_BY_SHARE_CODE] (context, data) {
+    try {
+      return WorkspaceApi.addWorkspaceByShareCode(data)
+    } catch (e) {}
   }
 }

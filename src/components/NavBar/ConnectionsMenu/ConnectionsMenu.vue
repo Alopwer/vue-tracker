@@ -3,7 +3,7 @@
     <Button icon="pi pi-users"
       class="p-button-icon p-button-outlined p-button-secondary mr-5 p-button-sm"
       @click="toggleUsersOverlay" />
-    <OverlayPanel ref="overlayPanelRef" @show="onOverlayPanelShow" @hide="onOverlayPanelHide">
+    <OverlayPanel class="connections-panel" ref="overlayPanelRef" @show="onOverlayPanelShow" @hide="onOverlayPanelHide">
       <div>
         <div class="p-inputtext-sm p-input-icon-right w-full mb-2" ref="userInputRef">
           <InputText class="w-full" type="text" v-model="searchValue" />
@@ -30,8 +30,7 @@ import { User, UserApi } from '../../../api/user.api'
 import ConnectionsMenuTab from './ConnectionsMenuTab.vue'
 import { CoworkerMutationTypes } from '../../../store/coworkers/mutation-types'
 import { CoworkerActionTypes } from '../../../store/coworkers/action-types'
-
-type OverlayPanelElType = HTMLElement & { toggle: (...args: any[]) => any }
+import { OverlayPanelElType } from '../../../common'
 
 export default defineComponent({
   name: 'ConnectionsMenu',

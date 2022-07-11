@@ -5,9 +5,8 @@
       <router-view/>
     </div>
   </div>
-  <div v-else>
-    LOADING...
-  </div>
+  <AppLoader v-else />
+  <Toast position="bottom-right" />
 </template>
 
 <script lang="ts">
@@ -16,11 +15,14 @@ import { useRouter } from 'vue-router'
 import { useStore } from './store'
 import { AuthActionTypes } from './store/auth/action-types'
 import NavBar from './components/NavBar/NavBar.vue'
+import AppLoader from './components/Shared/Loader.vue'
 import { CoworkerActionTypes } from './store/coworkers/action-types'
+import { WorkspaceActionTypes } from './store/workspaces/action-types'
 
 export default defineComponent({
   components: {
-    NavBar
+    NavBar,
+    AppLoader
   },
   setup () {
     const { state, dispatch, getters } = useStore()
@@ -40,6 +42,8 @@ export default defineComponent({
       if (isAuthenticatedValue) {
         dispatch(CoworkerActionTypes.GET_USER_CONNECTIONS)
         dispatch(CoworkerActionTypes.GET_REQUESTED_CONNECTION_REQUESTS)
+        dispatch(WorkspaceActionTypes.GET_OWNERS_WORKSPACES)
+        dispatch(WorkspaceActionTypes.GET_SHARED_WORKSPACES)
       }
     })
 
@@ -63,5 +67,10 @@ export default defineComponent({
   }
   .container {
     margin: 20px 0;
+  }
+  .p-overlaypanel {
+    &::before, &::after {
+      display: none;
+    }
   }
 </style>

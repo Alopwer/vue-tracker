@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav class="navbar">
     <RequestsMenu />
     <ConnectionsMenu />
     <Button @click="logOut" label="Log out" class="p-button-secondary p-button-outlined p-button-sm" />
@@ -40,34 +40,32 @@ export default defineComponent({
     font-family: var(--font-family);
     color: var(--text-color);
   }
-  nav {
+  .navbar {
     display: flex;
     justify-content: end;
-  }
-  .p-button-text a {
-    color: inherit;
-  }
-  .p-overlaypanel {
-    &::before, &::after {
-      display: none;
+    .p-button-text a {
+      color: inherit;
     }
-  }
-  .users {
-    &__item {
-      p {
-        margin-bottom: 0;
+    .users {
+      &__item {
+        p {
+          margin-bottom: 0;
+        }
       }
     }
   }
-  .p-tabview {
-    div.p-tabview-panels {
-      padding: 0 0.75rem;
-    }
-    .p-tabview-nav li {
-      & a.p-tabview-nav-link {
-        padding: 0.75rem;
-        &:not(.p-disabled):focus {
-          box-shadow: none;
+  .connections-panel, .requests-panel {
+    margin: 10px 20px 0;
+    .p-tabview {
+      div.p-tabview-panels {
+        padding: 0 0.75rem;
+      }
+      .p-tabview-nav li {
+        & a.p-tabview-nav-link {
+          padding: 0.75rem;
+          &:not(.p-disabled):focus {
+            box-shadow: none;
+          }
         }
       }
     }
