@@ -2,7 +2,8 @@
   <WorkspaceSection :shouldDisplay="workspaces.personal.length && workspacesInitialized"
     sectionTitle="My Workspaces"
     :isOwnWorkspace="true"
-    :workspaces="workspaces.personal" />
+    :workspaces="workspaces.personal"
+    @openCreateWorkspaceDialog="openCreateWorkspaceDialog" />
   <div v-if="!workspaces.personal.length && workspacesInitialized" class="create-workspace">
     <Button @click="openCreateWorkspaceDialog">Create workspace</Button>
   </div>

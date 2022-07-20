@@ -1,5 +1,5 @@
-import { User } from '@/api/user.api'
-import { Workspace } from '@/api/workspace.api'
+import { Card } from '@/api/card.api'
+import { Workspace, WorkspaceRequest } from '@/api/workspace.api'
 
 export const state = {
   workspaces: {
@@ -16,7 +16,9 @@ export const state = {
       isLoaded: false
     }
   },
-  workspaceShareCode: ''
+  workspaceRequests: [],
+  workspaceShareCode: '',
+  selectedWorkspaceCards: []
 }
 
 export type State = {
@@ -34,5 +36,7 @@ export type State = {
       isLoaded: boolean,
     }
   },
-  workspaceShareCode: string | null
+  workspaceRequests: WorkspaceRequest[],
+  workspaceShareCode: string | null,
+  selectedWorkspaceCards: Card[]
 }

@@ -1,5 +1,6 @@
 <template>
   <nav class="navbar">
+    <WorkspaceRequestsMenu />
     <RequestsMenu />
     <ConnectionsMenu />
     <Button @click="logOut" label="Log out" class="p-button-secondary p-button-outlined p-button-sm" />
@@ -12,12 +13,14 @@ import { useStore } from '../../store'
 import { AuthActionTypes } from '../../store/auth/action-types'
 import ConnectionsMenu from './ConnectionsMenu/ConnectionsMenu.vue'
 import RequestsMenu from './RequestsMenu/RequestsMenu.vue'
+import WorkspaceRequestsMenu from './WorkspaceRequestsMenu/WorkspaceRequestsMenu.vue'
 
 export default defineComponent({
   name: 'NavBar',
   components: {
     ConnectionsMenu,
-    RequestsMenu
+    RequestsMenu,
+    WorkspaceRequestsMenu
   },
   setup () {
     const { dispatch } = useStore()

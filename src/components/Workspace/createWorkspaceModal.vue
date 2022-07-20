@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watch, watchEffect, toRefs, ComputedRef, onBeforeUnmount } from 'vue'
+import { defineComponent, computed, ref, watch } from 'vue'
 import { useStore } from '../../store'
 import { WorkspaceActionTypes } from '../../store/workspaces/action-types'
 import { ListOption } from '../../common'
@@ -34,7 +34,7 @@ export default defineComponent({
     showWorkspaceDialog: Boolean
   },
   setup (props, { emit }) {
-    const { dispatch, state, getters } = useStore()
+    const { dispatch, getters } = useStore()
     const workspaceName = ref('')
     const selectedCoworkers = ref([])
     const isLoading = ref(false)
@@ -63,7 +63,7 @@ export default defineComponent({
       selectedCoworkers.value = []
     }
 
-    onBeforeUnmount(resetDialogData)
+    watch(isDialogOpen, (isDialogOpenValue) => !isDialogOpenValue && resetDialogData())
 
     return {
       createWorkspace,

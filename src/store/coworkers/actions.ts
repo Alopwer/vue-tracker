@@ -1,4 +1,3 @@
-import { EMPTY_ERROR } from '@/constants'
 import { ActionContext, ActionTree } from 'vuex'
 import { CoworkerActionTypes } from './action-types'
 import { CoworkerMutationTypes } from './mutation-types'

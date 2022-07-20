@@ -23,12 +23,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, nextTick, reactive, Ref, ref, watch } from 'vue'
+import { computed, defineComponent, nextTick, ref, watch } from 'vue'
 import { debounce } from '@/utils'
 import { useStore } from '../../../store'
-import { User, UserApi } from '../../../api/user.api'
 import RequestsMenuTab from './RequestsMenuTab.vue'
-import { CoworkerMutationTypes } from '../../../store/coworkers/mutation-types'
 import { CoworkerActionTypes } from '../../../store/coworkers/action-types'
 
 type OverlayPanelElType = HTMLElement & { toggle: (...args: any[]) => any }
@@ -39,8 +37,7 @@ export default defineComponent({
     RequestsMenuTab
   },
   setup () {
-    // on close remove search value
-    const { state, dispatch, commit } = useStore()
+    const { state, dispatch } = useStore()
 
     const searchValue = ref('')
     const activeTabIndex = ref(0)

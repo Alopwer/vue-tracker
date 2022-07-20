@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, watch, onBeforeUnmount } from 'vue'
+import { computed, defineComponent, reactive, watch } from 'vue'
 import { useStore } from '../../store'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import { EMPTY_ERROR } from '@/constants'

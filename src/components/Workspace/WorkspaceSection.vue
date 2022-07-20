@@ -16,6 +16,7 @@
               icon="pi pi-link"
               class="p-button-sm p-button-icon p-button-outlined p-button-secondary"
               @click.stop="getWorkspaceShareCode(workspace.workspaceId)" />
+            <div v-else></div>
             <div v-if="workspace.coworkers.length" class="workspace-coworkers">
               <Button icon="pi pi-users"
                 class="workspace-coworkers__btn p-button-icon p-button-outlined p-button-secondary p-button-sm"
@@ -37,7 +38,6 @@
 </template>
 
 <script lang="ts">
-import { Workspace } from '@/api/workspace.api'
 import { defineComponent, computed, toRefs } from 'vue'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
@@ -52,7 +52,10 @@ export default defineComponent({
     'workspaces',
     'isOwnWorkspace'
   ],
-  setup (props) {
+  emits: [
+    'openCreateWorkspaceDialog'
+  ],
+  setup (props, { emit }) {
     const { state, dispatch } = useStore()
     const router = useRouter()
 
@@ -89,6 +92,7 @@ export default defineComponent({
       setItemRef,
       toggleCoworkersOverlay,
       addByShareCode,
+      openCreateWorkspaceDialog: () => emit('openCreateWorkspaceDialog'),
       ...propsData
     }
   }

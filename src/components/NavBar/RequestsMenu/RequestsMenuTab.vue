@@ -11,11 +11,11 @@
         <Button v-if="canAcceptConnectionRequest"
           icon="pi pi-plus"
           class="p-button-success p-button-rounded p-button-text p-button-sm"
-          @click="declineConnectionRequest(user.userId)" />
+          @click="acceptConnectionRequest(user.userId)" />
         <Button v-else
           icon="pi pi-minus"
           class="p-button-danger p-button-rounded p-button-text p-button-sm"
-          @click="acceptConnectionRequest(user.userId)" />
+          @click="declineConnectionRequest(user.userId)" />
       </div>
     </div>
   </div>
@@ -39,7 +39,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup (props, { emit }) {
+  setup (props) {
     const { dispatch } = useStore()
     const declineConnectionRequest = async (userId: string) => {
       dispatch(CoworkerActionTypes.ACCEPT_CONNECTION_REQUEST, userId)

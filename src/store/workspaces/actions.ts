@@ -1,12 +1,10 @@
-import { EMPTY_ERROR } from '@/constants'
 import { ActionContext, ActionTree } from 'vuex'
 import { WorkspaceActionTypes } from './action-types'
 import { WorkspaceMutationTypes } from './mutation-types'
 import { Mutations } from './mutations'
 import { State } from './state'
 import { RootState } from '@/store'
-import { UserApi } from '@/api/user.api'
-import { CreateWorkspaceDto, WorkspaceApi } from '@/api/workspace.api'
+import { CreateWorkspaceCardDto, CreateWorkspaceDto, WorkspaceApi } from '@/api/workspace.api'
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
@@ -33,6 +31,25 @@ export interface Actions {
   [WorkspaceActionTypes.ADD_WORKSPACE_BY_SHARE_CODE](
     { commit }: AugmentedActionContext,
     payload: { workspaceShareCode: string }
+  ): Promise<unknown>,
+  [WorkspaceActionTypes.GET_USER_WORKSPACES_REQUESTS](
+    { commit }: AugmentedActionContext
+  ): Promise<unknown>,
+  [WorkspaceActionTypes.ACCEPT_WORKSPACE_REQUEST](
+    { commit }: AugmentedActionContext,
+    payload: { workspaceId: string }
+  ): Promise<unknown>,
+  [WorkspaceActionTypes.DECLINE_WORKSPACE_REQUEST](
+    { commit }: AugmentedActionContext,
+    payload: { workspaceId: string }
+  ): Promise<unknown>,
+  [WorkspaceActionTypes.GET_WORKSPACE_CARDS](
+    { commit }: AugmentedActionContext,
+    payload: { workspaceId: string }
+  ): Promise<unknown>,
+  [WorkspaceActionTypes.CREATE_WORKSPACE_CARD](
+    { commit }: AugmentedActionContext,
+    payload: { workspaceId: string } & CreateWorkspaceCardDto
   ): Promise<unknown>
 }
 
@@ -86,9 +103,39 @@ export const actions: ActionTree<State, RootState> & Actions = {
       context.commit(WorkspaceMutationTypes.SET_WORKSPACE_SHARE_CODE, workspaceShareCode)
     } catch (e) {}
   },
-  async [WorkspaceActionTypes.ADD_WORKSPACE_BY_SHARE_CODE] (context, data) {
+  [WorkspaceActionTypes.ADD_WORKSPACE_BY_SHARE_CODE] (_context, data) {
+    return WorkspaceApi.addWorkspaceByShareCode(data)
+  },
+  async [WorkspaceActionTypes.GET_USER_WORKSPACES_REQUESTS] (context) {
     try {
-      return WorkspaceApi.addWorkspaceByShareCode(data)
+      const workspaceRequests = await WorkspaceApi.getUserWorkspacesRequests()
+      context.commit(WorkspaceMutationTypes.SET_USER_WORKSPACE_REQUESTS, workspaceRequests)
+    } catch (e) {}
+  },
+  async [WorkspaceActionTypes.ACCEPT_WORKSPACE_REQUEST] (context, data) {
+    try {
+      await WorkspaceApi.acceptWorkspaceRequest(data.workspaceId)
+      context.commit(WorkspaceMutationTypes.REMOVE_WORKSPACE_REQUEST, data.workspaceId)
+      context.dispatch(WorkspaceActionTypes.GET_SHARED_WORKSPACES)
+    } catch (e) {}
+  },
+  async [WorkspaceActionTypes.DECLINE_WORKSPACE_REQUEST] (context, data) {
+    try {
+      await WorkspaceApi.declineWorkspaceRequest(data.workspaceId)
+      context.commit(WorkspaceMutationTypes.REMOVE_WORKSPACE_REQUEST, data.workspaceId)
+      context.dispatch(WorkspaceActionTypes.GET_SHARED_WORKSPACES)
+    } catch (e) {}
+  },
+  async [WorkspaceActionTypes.GET_WORKSPACE_CARDS] (context, data) {
+    try {
+      const cards = await WorkspaceApi.getWorkspaceCards(data.workspaceId)
+      context.commit(WorkspaceMutationTypes.SET_WORKSPACE_CARDS, cards)
+    } catch (e) {}
+  },
+  async [WorkspaceActionTypes.CREATE_WORKSPACE_CARD] (context, { workspaceId, ...createWorkspaceCardData }) {
+    try {
+      await WorkspaceApi.createWorkspaceCard(workspaceId, createWorkspaceCardData)
+      context.dispatch(WorkspaceActionTypes.GET_WORKSPACE_CARDS, { workspaceId })
     } catch (e) {}
   }
 }

@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, watch, watchEffect } from 'vue'
+import { computed, defineComponent, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from './store'
 import { AuthActionTypes } from './store/auth/action-types'

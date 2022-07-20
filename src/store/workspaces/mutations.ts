@@ -1,4 +1,5 @@
-import { Workspace } from '@/api/workspace.api'
+import { Card } from '@/api/card.api'
+import { Workspace, WorkspaceRequest } from '@/api/workspace.api'
 import { MutationTree } from 'vuex'
 import { WorkspaceMutationTypes } from './mutation-types'
 import { State } from './state'
@@ -11,6 +12,9 @@ export type Mutations<S = State> = {
   [WorkspaceMutationTypes.SET_SHARED_WORKSPACES_LOADING](state: S, payload: boolean): void;
   [WorkspaceMutationTypes.SET_SHARED_WORKSPACES_LOADED](state: S, payload: boolean): void;
   [WorkspaceMutationTypes.SET_WORKSPACE_SHARE_CODE](state: S, payload: string | null): void;
+  [WorkspaceMutationTypes.SET_USER_WORKSPACE_REQUESTS](state: S, payload: WorkspaceRequest[]): void;
+  [WorkspaceMutationTypes.REMOVE_WORKSPACE_REQUEST](state: S, payload: string): void;
+  [WorkspaceMutationTypes.SET_WORKSPACE_CARDS](state: S, payload: Card[]): void;
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -34,5 +38,14 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [WorkspaceMutationTypes.SET_WORKSPACE_SHARE_CODE] (state, value) {
     state.workspaceShareCode = value
+  },
+  [WorkspaceMutationTypes.SET_USER_WORKSPACE_REQUESTS] (state, value) {
+    state.workspaceRequests = value
+  },
+  [WorkspaceMutationTypes.REMOVE_WORKSPACE_REQUEST] (state, value) {
+    state.workspaceRequests = state.workspaceRequests.filter(request => request.workspaceId !== value)
+  },
+  [WorkspaceMutationTypes.SET_WORKSPACE_CARDS] (state, value) {
+    state.selectedWorkspaceCards = value
   }
 }

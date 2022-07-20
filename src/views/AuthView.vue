@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, onMounted, onUpdated, watch, watchEffect } from 'vue'
+import { computed, defineComponent, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../store'
 import AuthWrapper from '@/components/Auth/AuthWrapper.vue'

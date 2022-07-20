@@ -39,7 +39,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup (props, { emit }) {
+  setup (props) {
     const { dispatch } = useStore()
     const sendConnectionRequest = async (userId: string) => {
       dispatch(CoworkerActionTypes.SEND_CONNECTION_REQUEST, userId)

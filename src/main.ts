@@ -16,6 +16,7 @@ import MultiSelect from 'primevue/multiselect'
 import Chip from 'primevue/chip'
 import Toast from 'primevue/toast'
 import ToastService from 'primevue/toastservice'
+import Textarea from 'primevue/textarea'
 import 'primevue/resources/themes/vela-purple/theme.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
@@ -57,4 +58,5 @@ createApp(App)
   .component('MultiSelect', MultiSelect)
   .component('Chip', Chip)
   .component('Toast', Toast)
+  .component('Textarea', Textarea)
   .mount('#app')
