@@ -9,7 +9,7 @@
     </div>
     <div class="workspace-container grid">
       <div v-for="workspace in workspaces" :key="workspace.workspaceId" class="col-6 md:col-4 lg:col-3">
-        <div class="workspace cursor-pointer" @click="goToCardsPage(workspace.workspaceId)">
+        <div class="workspace cursor-pointer" @click="goToCollectionsPage(workspace.workspaceId)">
           <p>{{ workspace.title }}</p>
           <div class="workspace-footer">
             <Button v-if="isOwnWorkspace"
@@ -65,7 +65,7 @@ export default defineComponent({
 
     const coworkersPanelRefs: { [key: string]: OverlayPanelElType } = {}
 
-    const goToCardsPage = (id: string) => router.push(`/workspaces/${id}`)
+    const goToCollectionsPage = (id: string) => router.push(`/workspaces/${id}`)
 
     const getWorkspaceShareCode = (id: string) => {
       dispatch(WorkspaceActionTypes.GET_WORKSPACE_SHARE_CODE, { workspaceId: id })
@@ -82,12 +82,13 @@ export default defineComponent({
     }
 
     const addByShareCode = async () => {
-      await dispatch(WorkspaceActionTypes.ADD_WORKSPACE_BY_SHARE_CODE, { workspaceShareCode: workspaceShareCode.value! })
+      const shareCode = await navigator.clipboard.readText()
+      await dispatch(WorkspaceActionTypes.ADD_WORKSPACE_BY_SHARE_CODE, { workspaceShareCode: shareCode })
       dispatch(WorkspaceActionTypes.GET_SHARED_WORKSPACES)
     }
 
     return {
-      goToCardsPage,
+      goToCollectionsPage,
       getWorkspaceShareCode,
       setItemRef,
       toggleCoworkersOverlay,

@@ -1,21 +1,21 @@
 <template>
-  <Dialog :modal="true" :draggable="false" class="create-card-dialog" header="Create card" v-model:visible="isDialogOpen">
+  <Dialog :modal="true" :draggable="false" class="create-collection-dialog" header="Create collection" v-model:visible="isDialogOpen">
     <template #header>
-      <h3>Create card</h3>
+      <h3>Create collection</h3>
     </template>
     <div class="grid">
       <div class="col-12">
-        <InputText class="w-full" v-model="cardData.title" placeholder="Card title" />
+        <InputText class="w-full" v-model="collectionData.title" placeholder="Collection title" />
       </div>
       <div class="col-12">
         <Textarea class="w-full"
-          v-model="cardData.description"
+          v-model="collectionData.description"
           :autoResize="true"
           placeholder="Description" />
       </div>
     </div>
     <template #footer>
-      <Button icon="pi pi-plus" @click="createCard" :loading="isLoading" :disabled="isLoading || !cardData.title.length" />
+      <Button icon="pi pi-plus" @click="createCollection" :loading="isLoading" :disabled="isLoading || !collectionData.title.length" />
     </template>
   </Dialog>
 </template>
@@ -26,28 +26,28 @@ import { useStore } from '../../store'
 import { WorkspaceActionTypes } from '../../store/workspaces/action-types'
 
 export default defineComponent({
-  name: 'CreateCardDialog',
+  name: 'CreateCollectionModal',
   emits: ['toggleDialog'],
   props: {
-    showCardDialog: Boolean,
+    showCollectionDialog: Boolean,
     workspaceId: String
   },
   setup (props, { emit }) {
     const { dispatch } = useStore()
 
     const isLoading = ref(false)
-    const cardData = reactive({
+    const collectionData = reactive({
       title: '',
       description: ''
     })
 
-    const createCard = async () => {
+    const createCollection = async () => {
       isLoading.value = true
       await dispatch(
         WorkspaceActionTypes.CREATE_WORKSPACE_CARD,
         {
-          ...cardData,
-          workspaceId: props.workspaceId
+          ...collectionData,
+          workspaceId: props.workspaceId!
         }
       )
       isLoading.value = false
@@ -55,15 +55,15 @@ export default defineComponent({
     }
 
     const isDialogOpen = computed({
-      get: () => props.showCardDialog,
+      get: () => props.showCollectionDialog,
       set: (value) => {
         emit('toggleDialog', value)
       }
     })
 
     const resetDialogData = () => {
-      cardData.title = ''
-      cardData.description = ''
+      collectionData.title = ''
+      collectionData.description = ''
     }
 
     watch(isDialogOpen, (isDialogOpenValue) => !isDialogOpenValue && resetDialogData())
@@ -71,8 +71,8 @@ export default defineComponent({
     return {
       isDialogOpen,
       isLoading,
-      cardData,
-      createCard
+      collectionData,
+      createCollection
     }
   }
 })
@@ -88,7 +88,7 @@ export default defineComponent({
 </style>
 
 <style lang="scss">
-  .create-card-dialog {
+  .create-collection-dialog {
     margin: 15px;
   }
 </style>

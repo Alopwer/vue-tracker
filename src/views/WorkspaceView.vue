@@ -1,16 +1,16 @@
 <template>
   <div v-if="isLoaded">
     <h3>{{ workspace.title }}</h3>
-    <div class="card-container grid">
-      <div v-for="card in workspaceCards" :key="card.cardId" class="col-12 md:col-6 lg:col-3">
-        <div class="card-container__item">
-          {{ card.title }}
+    <div class="collection-container grid">
+      <div v-for="collection in workspaceCollections" :key="collection.collectionId" class="col-12 md:col-6 lg:col-3">
+        <div class="collection-container__item">
+          {{ collection.title }}
         </div>
       </div>
     </div>
-    <Button @click="openCreateCardDialog" class="mt-3">Create Card</Button>
-    <CreateCardModal :showCardDialog="showCardDialog"
-      @toggleDialog="showCardDialog = $event"
+    <Button @click="openCreateCollectionDialog" class="mt-3">Create Collection</Button>
+    <CreateCollectionModal :showCollectionDialog="showCollectionDialog"
+      @toggleDialog="showCollectionDialog = $event"
       :workspaceId="workspaceId" />
   </div>
   <AppLoader v-else />
@@ -21,13 +21,13 @@ import { defineComponent, computed, onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../store'
 import AppLoader from '@/components/Shared/Loader.vue'
-import CreateCardModal from '@/components/Card/CreateCardModal.vue'
+import CreateCollectionModal from '@/components/Collection/CreateCollectionModal.vue'
 import { WorkspaceActionTypes } from '@/store/workspaces/action-types'
 
 export default defineComponent({
   components: {
     AppLoader,
-    CreateCardModal
+    CreateCollectionModal
   },
   name: 'WorkspaceView',
   setup () {
@@ -35,7 +35,7 @@ export default defineComponent({
     const route = useRoute()
     const workspaceId = route.params.id as string
 
-    const showCardDialog = ref(false)
+    const showCollectionDialog = ref(false)
 
     onBeforeMount(() => {
       dispatch(WorkspaceActionTypes.GET_WORKSPACE_CARDS, { workspaceId })
@@ -43,18 +43,18 @@ export default defineComponent({
 
     const isLoaded = computed(() => getters.getLoadingState.isLoaded)
     const workspace = computed(() => getters.getWorkspaceById(workspaceId))
-    const workspaceCards = computed(() => state.workspaces.selectedWorkspaceCards)
+    const workspaceCollections = computed(() => state.workspaces.selectedWorkspaceCollections)
 
-    const openCreateCardDialog = () => {
-      showCardDialog.value = true
+    const openCreateCollectionDialog = () => {
+      showCollectionDialog.value = true
     }
 
     return {
       workspace,
       isLoaded,
-      workspaceCards,
-      openCreateCardDialog,
-      showCardDialog,
+      workspaceCollections,
+      openCreateCollectionDialog,
+      showCollectionDialog,
       workspaceId
     }
   }
@@ -62,7 +62,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.card-container {
+.collection-container {
   &__item {
     padding: 1rem 1.5rem;
     outline: 2px solid var(--surface-border);

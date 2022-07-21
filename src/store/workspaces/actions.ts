@@ -4,7 +4,7 @@ import { WorkspaceMutationTypes } from './mutation-types'
 import { Mutations } from './mutations'
 import { State } from './state'
 import { RootState } from '@/store'
-import { CreateWorkspaceCardDto, CreateWorkspaceDto, WorkspaceApi } from '@/api/workspace.api'
+import { CreateWorkspaceCollectionDto, CreateWorkspaceDto, WorkspaceApi } from '@/api/workspace.api'
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
@@ -49,7 +49,7 @@ export interface Actions {
   ): Promise<unknown>,
   [WorkspaceActionTypes.CREATE_WORKSPACE_CARD](
     { commit }: AugmentedActionContext,
-    payload: { workspaceId: string } & CreateWorkspaceCardDto
+    payload: { workspaceId: string } & CreateWorkspaceCollectionDto
   ): Promise<unknown>
 }
 
@@ -128,13 +128,13 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [WorkspaceActionTypes.GET_WORKSPACE_CARDS] (context, data) {
     try {
-      const cards = await WorkspaceApi.getWorkspaceCards(data.workspaceId)
-      context.commit(WorkspaceMutationTypes.SET_WORKSPACE_CARDS, cards)
+      const collections = await WorkspaceApi.getWorkspaceCollections(data.workspaceId)
+      context.commit(WorkspaceMutationTypes.SET_WORKSPACE_CARDS, collections)
     } catch (e) {}
   },
-  async [WorkspaceActionTypes.CREATE_WORKSPACE_CARD] (context, { workspaceId, ...createWorkspaceCardData }) {
+  async [WorkspaceActionTypes.CREATE_WORKSPACE_CARD] (context, { workspaceId, ...createWorkspaceCollectionData }) {
     try {
-      await WorkspaceApi.createWorkspaceCard(workspaceId, createWorkspaceCardData)
+      await WorkspaceApi.createWorkspaceCollection(workspaceId, createWorkspaceCollectionData)
       context.dispatch(WorkspaceActionTypes.GET_WORKSPACE_CARDS, { workspaceId })
     } catch (e) {}
   }

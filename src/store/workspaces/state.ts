@@ -1,4 +1,4 @@
-import { Card } from '@/api/card.api'
+import { Collection } from '@/api/collection.api'
 import { Workspace, WorkspaceRequest } from '@/api/workspace.api'
 
 export const state = {
@@ -18,7 +18,7 @@ export const state = {
   },
   workspaceRequests: [],
   workspaceShareCode: '',
-  selectedWorkspaceCards: []
+  selectedWorkspaceCollections: []
 }
 
 export type State = {
@@ -38,5 +38,5 @@ export type State = {
   },
   workspaceRequests: WorkspaceRequest[],
   workspaceShareCode: string | null,
-  selectedWorkspaceCards: Card[]
+  selectedWorkspaceCollections: Collection[]
 }

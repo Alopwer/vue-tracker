@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Card } from './card.api'
+import { Collection } from './collection.api'
 import { User } from './user.api'
 
 export type CreateWorkspaceDto = {
@@ -7,7 +7,7 @@ export type CreateWorkspaceDto = {
   coworkers: string[];
 }
 
-export type CreateWorkspaceCardDto = {
+export type CreateWorkspaceCollectionDto = {
   title: string;
   description: string;
 }
@@ -44,6 +44,14 @@ export class WorkspaceApi {
     return axios.get(`${this.workspaceApiUrl}/${workspaceId}/link`)
   }
 
+  static async getWorkspaceCollections (workspaceId: string): Promise<Collection[]> {
+    return axios.get(`${this.workspaceApiUrl}/${workspaceId}/collections`)
+  }
+
+  static async createWorkspaceCollection (workspaceId: string, data: CreateWorkspaceCollectionDto): Promise<Collection[]> {
+    return axios.post(`${this.workspaceApiUrl}/${workspaceId}/collections`, data)
+  }
+
   static async addWorkspaceByShareCode ({ workspaceShareCode }: { workspaceShareCode: string }): Promise<string> {
     return axios.post(`/relations${this.workspaceApiUrl}?workspaceShareCode=${workspaceShareCode}`)
   }
@@ -58,13 +66,5 @@ export class WorkspaceApi {
 
   static async declineWorkspaceRequest (workspaceId: string): Promise<WorkspaceRequest[]> {
     return axios.delete(`/relations${this.workspaceApiUrl}/${workspaceId}`)
-  }
-
-  static async getWorkspaceCards (workspaceId: string): Promise<Card[]> {
-    return axios.get(`${this.workspaceApiUrl}/${workspaceId}/cards`)
-  }
-
-  static async createWorkspaceCard (workspaceId: string, data: CreateWorkspaceCardDto): Promise<Card[]> {
-    return axios.post(`${this.workspaceApiUrl}/${workspaceId}/cards`, data)
   }
 }
