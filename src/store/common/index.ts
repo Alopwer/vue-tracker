@@ -7,7 +7,7 @@ import { getters, Getters } from './getters'
 
 export type { State } from './state'
 
-export type CollectionStore<S = State> = Omit<
+export type CommonStore<S = State> = Omit<
   VuexStore<S>,
   'getters' | 'commit' | 'dispatch'
 > & {
@@ -22,8 +22,7 @@ export type CollectionStore<S = State> = Omit<
     payload?: Parameters<Actions[K]>[1],
     options?: DispatchOptions
   ): ReturnType<Actions[K]>
-}
-& {
+} & {
   getters: {
     [K in keyof Getters]: ReturnType<Getters[K]>
   }

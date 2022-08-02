@@ -42,11 +42,11 @@ export default defineComponent({
   setup (props) {
     const { dispatch } = useStore()
     const declineConnectionRequest = async (userId: string) => {
-      dispatch(CoworkerActionTypes.ACCEPT_CONNECTION_REQUEST, userId)
+      dispatch(CoworkerActionTypes.DECLINE_CONNECTION_REQUEST, userId)
     }
 
     const acceptConnectionRequest = async (userId: string) => {
-      dispatch(CoworkerActionTypes.DECLINE_CONNECTION_REQUEST, userId)
+      dispatch(CoworkerActionTypes.ACCEPT_CONNECTION_REQUEST, userId)
     }
 
     return {

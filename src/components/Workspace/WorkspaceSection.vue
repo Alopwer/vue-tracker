@@ -9,17 +9,22 @@
     </div>
     <div class="workspace-container grid">
       <div v-for="workspace in workspaces" :key="workspace.workspaceId" class="col-6 md:col-4 lg:col-3">
-        <div class="workspace cursor-pointer" @click="goToCollectionsPage(workspace.workspaceId)">
-          <p>{{ workspace.title }}</p>
+        <div class="workspace cursor-pointer"
+          @click="goToWorkspacePage(workspace.workspaceId)"
+          :style="[workspace.coverImageUrl && { backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('${workspace.coverImageUrl}')` }]">
+          <div class="flex justify-content-between">
+            <p>{{ workspace.title }}</p>
+            <WorkspaceActionsMenu />
+          </div>
           <div class="workspace-footer">
             <Button v-if="isOwnWorkspace"
               icon="pi pi-link"
-              class="p-button-sm p-button-icon p-button-outlined p-button-secondary"
+              class="p-button-sm p-button-icon p-button-outlined"
               @click.stop="getWorkspaceShareCode(workspace.workspaceId)" />
             <div v-else></div>
             <div v-if="workspace.coworkers.length" class="workspace-coworkers">
               <Button icon="pi pi-users"
-                class="workspace-coworkers__btn p-button-icon p-button-outlined p-button-secondary p-button-sm"
+                class="workspace-coworkers__btn p-button-icon p-button-outlined p-button-sm"
                 @click.stop="event => toggleCoworkersOverlay(event, workspace.workspaceId)" />
               <OverlayPanel :ref="el => setItemRef(el, workspace.workspaceId)">
                 <div>
@@ -38,14 +43,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, toRefs } from 'vue'
+import { defineComponent, computed, toRefs, ref } from 'vue'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 import { WorkspaceActionTypes } from '@/store/workspaces/action-types'
 import { OverlayPanelElType } from '@/common'
+import WorkspaceActionsMenu from './WorkspaceActionsMenu.vue'
 
 export default defineComponent({
   name: 'WorkspaceSection',
+  components: {
+    WorkspaceActionsMenu
+  },
   props: [
     'shouldDisplay',
     'sectionTitle',
@@ -61,11 +70,9 @@ export default defineComponent({
 
     const propsData = toRefs(props)
 
-    const workspaceShareCode = computed(() => state.workspaces.workspaceShareCode)
-
     const coworkersPanelRefs: { [key: string]: OverlayPanelElType } = {}
 
-    const goToCollectionsPage = (id: string) => router.push(`/workspaces/${id}`)
+    const goToWorkspacePage = (id: string) => router.push(`/workspaces/${id}`)
 
     const getWorkspaceShareCode = (id: string) => {
       dispatch(WorkspaceActionTypes.GET_WORKSPACE_SHARE_CODE, { workspaceId: id })
@@ -88,7 +95,7 @@ export default defineComponent({
     }
 
     return {
-      goToCollectionsPage,
+      goToWorkspacePage,
       getWorkspaceShareCode,
       setItemRef,
       toggleCoworkersOverlay,
@@ -122,14 +129,24 @@ export default defineComponent({
     justify-content: space-between;
     flex-direction: column;
     outline: 2px solid transparent;
+    background-size: contain;
+    transition: all 0.2s ease-in-out;
     p {
       margin: 0;
+    }
+    i {
+      display: flex;
+      align-self: center;
     }
     &-coworkers {
       text-align: right;
     }
+    .p-button.p-button-outlined {
+      color: var(--text-color);
+    }
     &:hover {
       background: var(--surface-ground);
+      background-size: contain;
       outline: 2px solid var(--surface-border);
     }
     &-footer {

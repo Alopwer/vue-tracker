@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
 import WorkspaceView from '../views/WorkspaceView.vue'
+import CollectionView from '../views/CollectionView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -19,6 +20,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/workspaces/:id',
     name: 'workspace',
     component: WorkspaceView
+  },
+  {
+    path: '/workspaces/:workspaceId/collections/:collectionId',
+    name: 'collection',
+    component: CollectionView
   },
   {
     path: '/:pathMatch(.*)',

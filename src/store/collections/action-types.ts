@@ -1,3 +1,4 @@
 export enum CollectionActionTypes {
-
+  GET_COLLECTIONS = 'GET_COLLECTIONS',
+  CREATE_COLLECTION = 'CREATE_COLLECTION'
 }

@@ -5,11 +5,7 @@ import { User } from './user.api'
 export type CreateWorkspaceDto = {
   title: string;
   coworkers: string[];
-}
-
-export type CreateWorkspaceCollectionDto = {
-  title: string;
-  description: string;
+  imageObject: File | null;
 }
 
 export type Workspace = {
@@ -26,7 +22,7 @@ export type WorkspaceRequest = {
 
 export class WorkspaceApi {
   private static readonly baseName: string = '/workspaces'
-  private static readonly workspaceApiUrl: string = `${this.baseName}`
+  public static readonly workspaceApiUrl: string = `${this.baseName}`
 
   static async getOwnersWorkspaces (): Promise<Workspace[]> {
     return axios.get(`${this.workspaceApiUrl}`)
@@ -37,19 +33,19 @@ export class WorkspaceApi {
   }
 
   static async createWorkspace (data: CreateWorkspaceDto): Promise<Workspace> {
-    return axios.post(`${this.workspaceApiUrl}`, data)
+    const formData = new FormData()
+    formData.append('title', data.title)
+    if (data.coworkers.length) {
+      data.coworkers.forEach(coworkerId => formData.append('coworkers[]', coworkerId))
+    }
+    if (data.imageObject) {
+      formData.append('imageObject', data.imageObject)
+    }
+    return axios.post(`${this.workspaceApiUrl}`, formData)
   }
 
   static async getWorkspaceShareCode ({ workspaceId }: { workspaceId: string }): Promise<string> {
     return axios.get(`${this.workspaceApiUrl}/${workspaceId}/link`)
-  }
-
-  static async getWorkspaceCollections (workspaceId: string): Promise<Collection[]> {
-    return axios.get(`${this.workspaceApiUrl}/${workspaceId}/collections`)
-  }
-
-  static async createWorkspaceCollection (workspaceId: string, data: CreateWorkspaceCollectionDto): Promise<Collection[]> {
-    return axios.post(`${this.workspaceApiUrl}/${workspaceId}/collections`, data)
   }
 
   static async addWorkspaceByShareCode ({ workspaceShareCode }: { workspaceShareCode: string }): Promise<string> {

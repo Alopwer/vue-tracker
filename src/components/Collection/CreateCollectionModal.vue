@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts">
+import { CollectionActionTypes } from '@/store/collections/action-types'
 import { defineComponent, computed, ref, reactive, watch } from 'vue'
 import { useStore } from '../../store'
 import { WorkspaceActionTypes } from '../../store/workspaces/action-types'
@@ -44,7 +45,7 @@ export default defineComponent({
     const createCollection = async () => {
       isLoading.value = true
       await dispatch(
-        WorkspaceActionTypes.CREATE_WORKSPACE_CARD,
+        CollectionActionTypes.CREATE_COLLECTION,
         {
           ...collectionData,
           workspaceId: props.workspaceId!
