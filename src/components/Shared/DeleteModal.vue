@@ -1,22 +1,24 @@
 <template>
   <Dialog :modal="true" :draggable="false" class="create-workspace-dialog" v-model:visible="isDialogOpen">
     <template #header>
-      <h3>Delete collection</h3>
+      <h3>Delete {{ entityName }}</h3>
     </template>
     <div class="grid">
-      <div class="col-12 md:col-6">
+      <div class="col-12">
         <p>Are you sure you want to delete {{ itemName }}?</p>
       </div>
     </div>
     <template #footer>
-      <Button icon="pi pi-minus" @click="$emit('toggleDialog')" />
-      <Button icon="pi pi-plus" @click="$emit('onDelete')" />
+      <div class="flex">
+        <Button @click="$emit('toggleDialog')">Cancel</Button>
+        <Button @click="$emit('onDelete')">Delete</Button>
+      </div>
     </template>
   </Dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watch, reactive } from 'vue'
+import { defineComponent, computed, ref, watch, reactive, toRefs } from 'vue'
 import { useStore } from '../../store'
 import { WorkspaceActionTypes } from '../../store/workspaces/action-types'
 import { ListOption } from '../../common'
@@ -26,7 +28,8 @@ export default defineComponent({
   emits: ['onDelete', 'toggleDialog'],
   props: {
     showDeleteDialog: Boolean,
-    itemName: String
+    itemName: String,
+    entityName: String
   },
   setup (props, { emit }) {
     const { dispatch, getters } = useStore()
@@ -40,15 +43,22 @@ export default defineComponent({
 
     return {
       isDialogOpen,
-      ...props
+      ...toRefs(props)
     }
   }
 })
 </script>
 
 <style scoped lang="scss">
-  .p-dialog .p-dialog-footer button {
-    width: 100%;
+  .p-dialog .p-dialog-footer {
+    button {
+      text-align: center;
+      display: inline-block;
+      width: 50%;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
   h3 {
     margin: 0;

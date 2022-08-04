@@ -5,12 +5,18 @@ import { Mutations } from './mutations'
 import { State } from './state'
 import { RootState } from '@/store'
 import { UserApi } from '@/api/user.api'
+import { Mutations as CommonMutations } from '../common/mutations'
+import { CommonMutationTypes } from '../common/mutation-types'
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
     key: K,
     payload?: Parameters<Mutations[K]>[1]
   ): ReturnType<Mutations[K]>
+  commit<K extends keyof CommonMutations>(
+    key: K,
+    payload?: Parameters<CommonMutations[K]>[1]
+  ): ReturnType<CommonMutations[K]>
 } & Omit<ActionContext<State, RootState>, 'commit'>
 
 export interface Actions {
@@ -45,7 +51,11 @@ export interface Actions {
   [CoworkerActionTypes.ACCEPT_CONNECTION_REQUEST](
     { commit }: AugmentedActionContext,
     payload: string
-  ): Promise<boolean>
+  ): Promise<boolean>,
+  [CoworkerActionTypes.GET_USER_BY_ID](
+    { commit }: AugmentedActionContext,
+    payload: string
+  ): unknown
 }
 
 export const actions: ActionTree<State, RootState> & Actions = {
@@ -127,5 +137,11 @@ export const actions: ActionTree<State, RootState> & Actions = {
     } catch (e) {
       return false
     }
+  },
+  async [CoworkerActionTypes.GET_USER_BY_ID] (context, userId) {
+    const user = await UserApi.getUserById(userId)
+      .then(user => context.commit(CoworkerMutationTypes.SET_CACHED_USER, user))
+      .catch((e: string) => context.commit(CommonMutationTypes.SET_ERROR, e))
+    return user
   }
 }

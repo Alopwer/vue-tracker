@@ -1,7 +1,9 @@
 import { User } from '@/api/user.api'
 
 export const state = {
+  // approved connections
   connections: [],
+  // users in input TODO: change naming
   users: [],
   loadingState: {
     connections: {
@@ -16,7 +18,9 @@ export const state = {
   connectionRequests: {
     requested: [],
     received: []
-  }
+  },
+  // all users found by navigating through application
+  cachedUsers: {}
 }
 
 export type State = {
@@ -35,5 +39,6 @@ export type State = {
   connectionRequests: {
     requested: User[],
     received: User[]
-  }
+  },
+  cachedUsers: Record<string, User>
 }

@@ -14,7 +14,7 @@
           :style="[workspace.coverImageUrl && { backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('${workspace.coverImageUrl}')` }]">
           <div class="flex justify-content-between">
             <p>{{ workspace.title }}</p>
-            <WorkspaceActionsMenu />
+            <WorkspaceActionsMenu :workspaceName="workspace.title" />
           </div>
           <div class="workspace-footer">
             <Button v-if="isOwnWorkspace"
@@ -22,12 +22,16 @@
               class="p-button-sm p-button-icon p-button-outlined"
               @click.stop="getWorkspaceShareCode(workspace.workspaceId)" />
             <div v-else></div>
-            <div v-if="workspace.coworkers.length" class="workspace-coworkers">
+            <div v-if="isOwnWorkspace ? workspace.coworkers.length : workspace.ownerId" class="workspace-coworkers">
               <Button icon="pi pi-users"
                 class="workspace-coworkers__btn p-button-icon p-button-outlined p-button-sm"
-                @click.stop="event => toggleCoworkersOverlay(event, workspace.workspaceId)" />
-              <OverlayPanel :ref="el => setItemRef(el, workspace.workspaceId)">
+                @click.stop="event => toggleCoworkersOverlay(event, workspace)" />
+              <OverlayPanel ref="coworkersPanelRef">
                 <div>
+                  <div v-if="!isOwnWorkspace">
+                    <h4 class="mt-0">Owner</h4>
+                    <p class="coworkers__item">{{ cachedUsers[workspace.ownerId]?.username }}</p>
+                  </div>
                   <p class="coworkers__item" v-for="coworker in workspace.coworkers" :key="coworker.userId">{{ coworker.username }}</p>
                 </div>
               </OverlayPanel>
@@ -43,12 +47,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, toRefs, ref } from 'vue'
+import { defineComponent, computed, toRefs, ref, reactive } from 'vue'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 import { WorkspaceActionTypes } from '@/store/workspaces/action-types'
 import { OverlayPanelElType } from '@/common'
-import WorkspaceActionsMenu from './WorkspaceActionsMenu.vue'
+import { useMenu } from '@/hooks'
+import { CoworkerActionTypes } from '@/store/coworkers/action-types'
+import { WorkspaceRequest } from '@/api/workspace.api'
+import WorkspaceActionsMenu from '@/components/Workspace/WorkspaceActionsMenu.vue'
 
 export default defineComponent({
   name: 'WorkspaceSection',
@@ -70,7 +77,7 @@ export default defineComponent({
 
     const propsData = toRefs(props)
 
-    const coworkersPanelRefs: { [key: string]: OverlayPanelElType } = {}
+    const coworkersPanelRef = ref()
 
     const goToWorkspacePage = (id: string) => router.push(`/workspaces/${id}`)
 
@@ -78,14 +85,9 @@ export default defineComponent({
       dispatch(WorkspaceActionTypes.GET_WORKSPACE_SHARE_CODE, { workspaceId: id })
     }
 
-    const setItemRef = (el: OverlayPanelElType, id: string) => {
-      if (el) {
-        coworkersPanelRefs[id] = el
-      }
-    }
-
-    const toggleCoworkersOverlay = (event: Event, id: number) => {
-      coworkersPanelRefs[id].toggle(event)
+    const toggleCoworkersOverlay = (event: Event, { workspaceId, ownerId }: WorkspaceRequest) => {
+      coworkersPanelRef.value[0].toggle(event)
+      getUserById(ownerId)
     }
 
     const addByShareCode = async () => {
@@ -94,13 +96,24 @@ export default defineComponent({
       dispatch(WorkspaceActionTypes.GET_SHARED_WORKSPACES)
     }
 
+    const cachedUsers = computed(() => state.coworkers.cachedUsers)
+
+    const getUserById = async (userId: string) => {
+      if (cachedUsers.value[userId]) {
+        return cachedUsers.value[userId]
+      }
+      dispatch(CoworkerActionTypes.GET_USER_BY_ID, userId)
+    }
+
     return {
       goToWorkspacePage,
       getWorkspaceShareCode,
-      setItemRef,
       toggleCoworkersOverlay,
       addByShareCode,
       openCreateWorkspaceDialog: () => emit('openCreateWorkspaceDialog'),
+      getUserById,
+      cachedUsers,
+      coworkersPanelRef,
       ...propsData
     }
   }

@@ -11,6 +11,10 @@ export class UserApi {
   private static readonly userApiUrl: string = `${this.baseName}`
   private static readonly coworkersApiUrl: string = '/relations/coworkers'
 
+  static async getUserById (userId: string): Promise<User> {
+    return axios.get(`${this.userApiUrl}/${userId}`)
+  }
+
   static async getUsersByUserName (username?: string): Promise<User[]> {
     return axios.get(`${this.userApiUrl}`, { params: { username } })
   }

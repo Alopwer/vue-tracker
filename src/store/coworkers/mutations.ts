@@ -14,6 +14,7 @@ export type Mutations<S = State> = {
   [CoworkerMutationTypes.UPDATE_REQUESTED_CONNECTION_REQUESTS](state: S, payload: string): void;
   [CoworkerMutationTypes.SET_RECEIVED_CONNECTION_REQUESTS](state: S, payload: User[]): void;
   [CoworkerMutationTypes.UPDATE_RECEIVED_CONNECTION_REQUESTS](state: S, payload: string): void;
+  [CoworkerMutationTypes.SET_CACHED_USER](state: S, payload: User): void;
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -54,5 +55,8 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [CoworkerMutationTypes.UPDATE_RECEIVED_CONNECTION_REQUESTS] (state, userId) {
     state.connectionRequests.received = state.connectionRequests.received.filter(user => user.userId !== userId)
+  },
+  [CoworkerMutationTypes.SET_CACHED_USER] (state, user) {
+    state.cachedUsers[user.userId] = user
   }
 }
